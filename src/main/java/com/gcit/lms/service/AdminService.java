@@ -142,7 +142,7 @@ public class AdminService extends BaseController {
 	@Transactional
 	public ResponseEntity<List<Author>> readAllAuthors() {
 
-		String baseURL = "http://ec2-34-204-51-79.compute-1.amazonaws.com:8015/lms/authors";
+		String baseURL = "http://ec2-54-84-251-9.compute-1.amazonaws.com:8015/lms/authors";
 		ResponseEntity<Author[]> response = restTemplate.getForEntity(baseURL, Author[].class);
 		if(response.getBody() == null) {
 			ArrayList<Author> arrayList = new ArrayList(Arrays.asList(response.getBody()));
