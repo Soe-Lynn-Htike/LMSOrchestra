@@ -158,11 +158,11 @@ public class AdminService extends BaseController {
 	@Transactional
 	public ResponseEntity<?> readAuthorsById(@PathVariable String Id) {
 		
-		String baseURL = "http://localhost:8002/lms/";
+		String baseURL = "http://ec2-54-84-251-9.compute-1.amazonaws.com:8015/lms/";
 		Author author = new Author();
 		author = restTemplate.getForObject(baseURL + "author/" + Id, Author.class);
 		if(author == null) {
-			return new ResponseEntity<Object>(new CustomErrorType("Author with id " + Id + " not found"),
+			return new ResponseEntity<Object>(new CustomErrorType("Publisher with id " + Id + " not found"),
 					HttpStatus.NOT_FOUND);
 		}else {
 			return new ResponseEntity<Author>(author, HttpStatus.OK);
@@ -175,11 +175,17 @@ public class AdminService extends BaseController {
 	// publisher update
 	@RequestMapping(value = "author/{id}", method = RequestMethod.PUT, consumes = "application/json")
 	@Transactional
-	public void updateAuthor(@PathVariable String id, @RequestBody Author author) {
-		RestTemplate restTemplate = new RestTemplate();
-		String baseURL = "http://localhost:8002/lms/";
+	public ResponseEntity<?> updateAuthor(@PathVariable String id, @RequestBody Author author) {
+		String baseURL = "http://ec2-54-84-251-9.compute-1.amazonaws.com:8015/lms/";
 
-		restTemplate.put(baseURL + "publisher/" + id, author);
+		HttpEntity<Author> entity = new HttpEntity<Author>(author);
+		ResponseEntity<Author> checkauthor = restTemplate.exchange(baseURL, HttpMethod.PUT, entity, Author.class);
+		if (checkauthor == null) {
+			return new ResponseEntity<Object>(new CustomErrorType("Publisher with id " + id + " cannot update"),
+					HttpStatus.NOT_FOUND);
+		} else {
+			return checkauthor;
+		}
 
 	}
 	
@@ -401,7 +407,7 @@ public class AdminService extends BaseController {
 	@Transactional
 	public ResponseEntity<?> updatePublisher(@RequestBody Publisher publisher) throws SQLException {
 		
-		String baseURL = "http://localhost:8002/lms/publisher";
+		String baseURL = "http://ec2-54-84-251-9.compute-1.amazonaws.com:8015/lms/publisher";
 		HttpEntity<Publisher> entity = new HttpEntity<Publisher>(publisher);
 		ResponseEntity<Publisher> responseEntity = restTemplate.postForEntity(baseURL, entity, Publisher.class);
 		if(responseEntity == null) {
@@ -416,8 +422,7 @@ public class AdminService extends BaseController {
 	@Transactional
 	public ResponseEntity<?> updatePublisher(@PathVariable String id, @RequestBody Publisher publisher) {
 
-		
-		String baseURL = "http://localhost:8002/lms/publisher/"+id;
+		String baseURL = "http://ec2-54-84-251-9.compute-1.amazonaws.com:8015/lms/publisher/" +id;
 		HttpEntity<Publisher> entity = new HttpEntity<Publisher>(publisher);
 	    ResponseEntity<Publisher> p = restTemplate.exchange(baseURL, HttpMethod.PUT, entity, Publisher.class);
 	    if(p== null) {
@@ -434,7 +439,7 @@ public class AdminService extends BaseController {
 	@RequestMapping(value = "publisher/{id}", method = RequestMethod.DELETE, consumes = "application/json")
 	@Transactional
 	public ResponseEntity<?> deletePublisher(@PathVariable String id) throws SQLException {
-		String baseURL = "http://localhost:8002/lms/publisher/" + id;
+		String baseURL = "http://ec2-54-84-251-9.compute-1.amazonaws.com:8015/lms/publisher/" + id;
 		restTemplate.delete(baseURL);
 		return new ResponseEntity<Publisher>(HttpStatus.NO_CONTENT);
 	}
@@ -484,17 +489,16 @@ public class AdminService extends BaseController {
 	@RequestMapping(value = "publishers", method = RequestMethod.GET, produces = "application/json")
 	@Transactional
 	public ResponseEntity<List<Publisher>> readPublisher() throws SQLException {
-		List<Publisher> publishers = new ArrayList<>();
-		try {
-			publishers = publisherdao.readPublishers("");
-			for (Publisher p : publishers) {
-				p.setBooks(bookdao.readBooksByPublisherId(p));
-			}
-			return new ResponseEntity<List<Publisher>>(publishers,HttpStatus.OK);
-		} catch (ClassNotFoundException | SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		String baseURL = "http://ec2-54-84-251-9.compute-1.amazonaws.com:8015/lms/publishers";
+		ResponseEntity<Publisher[]> response = restTemplate.getForEntity(baseURL, Publisher[].class);
+		if(response.getBody() == null) {
+			ArrayList<Publisher> arrayList = new ArrayList(Arrays.asList(response.getBody()));
+
 			return new ResponseEntity<List<Publisher>>(HttpStatus.NO_CONTENT);
+		}else {
+			ArrayList<Publisher> arrayList = new ArrayList(Arrays.asList(response.getBody()));
+
+			return new ResponseEntity<List<Publisher>>(arrayList, HttpStatus.OK);
 		}
 	
 	}
