@@ -6,14 +6,12 @@ package com.gcit.lms.service;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-import org.json.JSONException;
-import org.json.JSONObject;
+
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.ParameterizedTypeReference;
+
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -24,10 +22,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
-import org.springframework.web.servlet.ModelAndView;
+
 import org.springframework.web.util.UriComponentsBuilder;
 
 import com.gcit.lms.dao.AuthorDAO;
@@ -45,7 +42,6 @@ import com.gcit.lms.entity.Borrower;
 import com.gcit.lms.entity.Branch;
 import com.gcit.lms.entity.Genre;
 import com.gcit.lms.entity.Publisher;
-import com.mysql.fabric.xmlrpc.base.Array;
 
 /**
  * @author Aaron
