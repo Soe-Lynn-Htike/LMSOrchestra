@@ -537,7 +537,7 @@ public class AdminService extends BaseController {
 	@RequestMapping(value = "publisher/{Id}", method = RequestMethod.GET, produces = "application/json")
 	@Transactional
 	public ResponseEntity<?> readPublisherById(@PathVariable String Id) throws SQLException {
-		String baseURL = "http://localhost:8002/lms/";
+		String baseURL = "http://ec2-54-84-251-9.compute-1.amazonaws.com:8015/lms/";
 		Publisher publisher = new Publisher();
 		publisher = restTemplate.getForObject(baseURL + "publisher/" + Id, Publisher.class);
 		if(publisher == null) {
