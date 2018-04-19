@@ -195,7 +195,7 @@ public class AdminService extends BaseController {
 
 		try {
 				adao.deleteAuthorBook(author);
-				System.out.print("sda");
+				System.out.print("sdaaa");
 		} catch (ClassNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace(); // log your stacktrace
